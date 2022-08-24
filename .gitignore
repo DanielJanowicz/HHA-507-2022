@@ -1,0 +1,10 @@
+.env
+*.env
+
+# ignore ds_store files
+.DS_Store
+*.DS_Store
+
+# ignore all .json files inside of ingestion/bigquery/
+ingestion/example_files/bigquery/**/*.json
+ingestion/example_files/bigquery/*.json
