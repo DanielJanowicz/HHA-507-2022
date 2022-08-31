@@ -23,7 +23,7 @@ list(df)
 df.columns = df.columns.str.replace('[^A-Za-z0-9]+', '_') ## regex 
 list(df)
 
-# renameing columns
+# renaming columns
 df.rename(columns={'CAMPUS':'hospital_name'}) # rename the column, where the first value is the old name and the second value is the new name
 
 # change all column names to lowercase
