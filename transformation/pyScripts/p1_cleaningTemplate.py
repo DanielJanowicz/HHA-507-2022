@@ -4,10 +4,19 @@ import uuid
 import numpy as np
 
 # load in messy data 
-df = pd.read_csv('transformation/dataFiles/113243405_StonyBrookUniversityHospital_standardcharges.csv')
+df = pd.read_csv('transformation/dataFiles/raw/113243405_StonyBrookUniversityHospital_standardcharges.csv')
+
 
 # get a count of the number of rows and columns
-df.shape
+countRows, countColumns = df.shape
+
+# preview get random sample of 25 rows
+df.sample(25)
+
+# change countRows to full integer
+tenPercent = int(countRows * 0.1)
+
+sample_df = df.sample(tenPercent)
 
 ## clean the data
 # list columns
@@ -18,13 +27,20 @@ list(df)
 ############## COLUMN NAMES ##############
 ############## COLUMN NAMES ##############
 
+df.columns
+column_names = list(df)
+
 
 # remove all special characters and whitespace ' ' from column names
 df.columns = df.columns.str.replace('[^A-Za-z0-9]+', '_') ## regex 
 list(df)
 
 # renaming columns
-df.rename(columns={'CAMPUS':'hospital_name'}) # rename the column, where the first value is the old name and the second value is the new name
+df.rename(columns={'code':'billing_code'}) # rename the column, where the first value is the old name and the second value is the new name
+
+df = df.rename(columns={
+    'emblemhealth_ghi_commercial':'emblemhealth_ghi_commercial_mod'
+})
 
 # change all column names to lowercase
 df.columns = df.columns.str.lower()
@@ -36,7 +52,7 @@ df.columns = df.columns.str.upper()
 df.columns = df.columns.str.replace(' ', '_')
 
 # droping columns
-df.drop(['Col1', 'Col2', 'Col3'], axis=1, inplace=True) # remember this is CASE SENSITIVE
+df.drop(['billing_code', 'Description', 'Code_Type'], axis=1, inplace=True, errors='ignore') # remember this is CASE SENSITIVE
 
 
 ############## REMOVING WHITESPACE ##############
@@ -76,6 +92,8 @@ objects = df.select_dtypes(include=['object']).columns
 ## type is appropriate for the data model you are creating
 
 
+# billing code is not in the chart, but this is an example on how to change the type from obj to str
+df['billing_code'] = df['billing_code'].astype(str)
 
 ########## DATES ##########
 ########## DATES ##########
@@ -125,6 +143,9 @@ df.drop([0,1,2,3,4,5,6,7,8,9], axis=0, inplace=True) # example of dropping rows
 # Example 1
 ## create a unique id for each row using uuid
 df['id'] = df.apply(lambda row: uuid.uuid4(), axis=1)
+
+# create a unique id for each row using uuid that contains 8 characters
+df['id'] = df.apply(lambda row: uuid.uuid4().hex[:8], axis=1)
 
 # Example 2
 ## create a function that will create a unique id for each row

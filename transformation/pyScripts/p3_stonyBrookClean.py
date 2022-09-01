@@ -1,7 +1,7 @@
 import pandas as pd 
 
 # load the data
-stonybrook = pd.read_csv('transformation/dataFiles/113243405_StonyBrookUniversityHospital_standardcharges.csv')
+stonybrook = pd.read_csv('transformation/dataFiles/raw/113243405_StonyBrookUniversityHospital_standardcharges.csv')
 
 ## looking at the data frame, it is currently in WIDE format, we want to make it STACKED format
 ## so first lets get a name of the columns 
@@ -12,4 +12,9 @@ valueVars = columnNames[8:] #these are the idential variables that we want to 's
 
 ## transofmring with the melt function from a wide dataframe to a stacked dataframe
 stonybrook_modified = stonybrook.melt(id_vars=idVars, value_vars=valueVars)
+
+# Saves new dataframe into csv file
+
+stonybrook_modified.to_csv('transformation/dataFiles/clean/113243405_StonyBrookUniversityHospital_standardcharges.csv')
+
 
