@@ -3,9 +3,11 @@ import datetime as dt
 import uuid 
 import numpy as np
 
+
 # load in messy data 
 df = pd.read_csv('transformation/dataFiles/raw/113243405_StonyBrookUniversityHospital_standardcharges.csv')
 
+df
 
 # get a count of the number of rows and columns
 countRows, countColumns = df.shape
@@ -16,7 +18,9 @@ df.sample(25)
 # change countRows to full integer
 tenPercent = int(countRows * 0.1)
 
-sample_df = df.sample(tenPercent)
+sample_df_1 = df.sample(tenPercent)
+sample_df_2 = df.sample(int(countRows * 0.1))
+
 
 ## clean the data
 # list columns
@@ -27,7 +31,7 @@ list(df)
 ############## COLUMN NAMES ##############
 ############## COLUMN NAMES ##############
 
-df.columns
+df.columns 
 column_names = list(df)
 
 
@@ -36,11 +40,13 @@ df.columns = df.columns.str.replace('[^A-Za-z0-9]+', '_') ## regex
 list(df)
 
 # renaming columns
-df.rename(columns={'code':'billing_code'}) # rename the column, where the first value is the old name and the second value is the new name
+df = df.rename(columns={'Code':'billing_code'}) # rename the column, where the first value is the old name and the second value is the new name
+df
 
 df = df.rename(columns={
-    'emblemhealth_ghi_commercial':'emblemhealth_ghi_commercial_mod'
-})
+    'emblemhealth_ghi_commercial':'emblemhealth_ghi_commercial_mod',
+    'emblemhealth_hip_medicare_advantage':'emblemhealth_hip_medicare_advantage_mod',
+    })
 
 # change all column names to lowercase
 df.columns = df.columns.str.lower()
@@ -52,8 +58,8 @@ df.columns = df.columns.str.upper()
 df.columns = df.columns.str.replace(' ', '_')
 
 # droping columns
-df.drop(['billing_code', 'Description', 'Code_Type'], axis=1, inplace=True, errors='ignore') # remember this is CASE SENSITIVE
-
+df.drop(['billing_code'], axis=1, inplace=True, errors='ignore') # remember this is CASE SENSITIVE
+df.columns
 
 ############## REMOVING WHITESPACE ##############
 ############## REMOVING WHITESPACE ##############
@@ -62,7 +68,7 @@ df.drop(['billing_code', 'Description', 'Code_Type'], axis=1, inplace=True, erro
 # remove all whitespace for values within a specific column
 df['x'] = df['x'].str.strip()
 # remove all special characters and whitespace ' ' from a specific column
-df['x'] = df['x'].str.replace('[^A-Za-z0-9]+', '_') ## regex # regex tutorial/info: https://www.w3schools.com/python/python_regex.asp;  https://www.regular-expressions.info/refquick.html
+df['billing_code'] = df['billing_code'].str.replace('[^A-Za-z0-9]+', '_') ## regex # regex tutorial/info: https://www.w3schools.com/python/python_regex.asp;  https://www.regular-expressions.info/refquick.html
 
 
 
@@ -91,9 +97,12 @@ objects = df.select_dtypes(include=['object']).columns
 ## you would then manually go through each of these, and determine if the column 
 ## type is appropriate for the data model you are creating
 
-
-# billing code is not in the chart, but this is an example on how to change the type from obj to str
 df['billing_code'] = df['billing_code'].astype(str)
+df['billing_code'] = str(df['billing_code'])
+
+# get billing_code type 
+df.dtypes
+
 
 ########## DATES ##########
 ########## DATES ##########
@@ -142,10 +151,10 @@ df.drop([0,1,2,3,4,5,6,7,8,9], axis=0, inplace=True) # example of dropping rows
 
 # Example 1
 ## create a unique id for each row using uuid
-df['id'] = df.apply(lambda row: uuid.uuid4(), axis=1)
+df['id'] = df.apply(lambda x: uuid.uuid4(), axis=1)
 
-# create a unique id for each row using uuid that contains 8 characters
-df['id'] = df.apply(lambda row: uuid.uuid4().hex[:8], axis=1)
+## create a unique id for each row using uuid that contains 8 characters
+df['id'] = df.apply(lambda x: uuid.uuid4().hex[:8], axis=1)
 
 # Example 2
 ## create a function that will create a unique id for each row

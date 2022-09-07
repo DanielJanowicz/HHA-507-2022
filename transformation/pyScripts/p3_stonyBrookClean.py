@@ -13,8 +13,7 @@ valueVars = columnNames[8:] #these are the idential variables that we want to 's
 ## transofmring with the melt function from a wide dataframe to a stacked dataframe
 stonybrook_modified = stonybrook.melt(id_vars=idVars, value_vars=valueVars)
 
-# Saves new dataframe into csv file
+print(stonybrook_modified.head(50))
 
-stonybrook_modified.to_csv('transformation/dataFiles/clean/113243405_StonyBrookUniversityHospital_standardcharges.csv')
-
-
+stonybrook_modified.to_csv('transformation/dataFiles/clean/113243405_StonyBrookUniversityHospital_standardcharges_clean.csv')
+stonybrook_modified.shape
