@@ -14,6 +14,7 @@ medications.columns
 patients['Id']
 medications['PATIENT']
 
+
 ########################
 ### merge examples 
 # add medications to patients
