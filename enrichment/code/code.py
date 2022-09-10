@@ -14,6 +14,47 @@ medications.columns
 patients['Id']
 medications['PATIENT']
 
+########################
+### Medications table will merge with patients table in order to enrich it
+########################
+
+df_patients_small = patients[['Id', 'CITY', 'STATE', 'COUNTY', 'ZIP']]
+print(df_patients_small.sample(10).to_markdown())
+
+df_medications_small = medications[['PATIENT', 'CODE', 'DESCRIPTION', 'BASE_COST', 'PAYER']]
+print(df_medications_small.sample(10).to_markdown())
+
+combined_df = df_medications_small.merge(df_patients_small, how='left', left_on='PATIENT', right_on='Id')
+
+### Alternative combined
+comdined_df = pd.merge(df_medications_small, df_patients_small, how='left', left_on='PATIENT', right_on='Id')
+
+### Save to csv
+combined_df.to_csv('enrichment/example_data/combined.csv')
+combined_df.shape
+
+payers_df = pd.read_csv('enrichment/example_data/payers.csv')
+
+######
+med_df = medications[['PATIENT', 'PAYER', 'CODE']]
+
+pay_df = payers_df[['Id', 'CITY']]
+pay_df = pay_df.rename(columns={'CITY' : 'CITY_PAYER'}, inplace=True)
+
+pat_df = patients[['Id', 'CITY', 'STATE', 'COUNTY', 'ZIP']]
+
+
+############### Merge between med_df and pay_df
+med_pay_df = med_df.merge(pay_df, how='left', left_on='PAYER', right_on='Id')
+
+
+
+
+# patients_payers = payers_df[['NAME', 'Id', 'AMOUNT_COVERED']]
+
+# patients_payers = df_patients_small.merge(payers_df_small, how='left')
+
+
 
 ########################
 ### merge examples 
