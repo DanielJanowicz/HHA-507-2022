@@ -13,7 +13,17 @@ print(soup.prettify())
 
 
 # get the text from each repo
-soup.find_all('p',class_='col-9 color-fg-muted my-1 pr-4')
+descriptions = soup.find_all('p',class_='col-9 color-fg-muted my-1 pr-4')
+
+output_descriptions = []
+for i in descriptions: #for x in y:
+    print(i.text)
+    data = i.text
+    output_descriptions.append(data)
+
+len(output_descriptions)
+output_descriptions[1]
+output_descriptions[3]
 
 # get the programming language from each repo
 p_langauge = soup.find_all('span',attrs={'itemprop': 'programmingLanguage'})
@@ -41,6 +51,7 @@ articles = soup.find_all('div',attrs={'data-hpc':True}) ## way two
 # get the name of the repo and print it
 repo_name = soup.find_all('h1',class_='h3 lh-condensed')
 repo_names = []
+
 for item in repo_name:
     print(item.text)
     name = item.text 
